@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 3.0.0\n"
+"POT-Creation-Date: 2010-10-24 21:43\n"
+"PO-Revision-Date: 2010-10-24 21:43+0100\n"
+"Last-Translator: mikrom <mikrom@mikrom.cz>\n"
+"Language-Team: mikrom <mikrom@mikrom.cz>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: dxgettext 1.3.0\n"
+"X-Poedit-Language: Czech\n"
+"X-Poedit-Country: CZECH REPUBLIC\n"
+
+#: tomtom.ggp.pas:16 
+msgid "TomTom"
+msgstr ""
+
+#: tomtom.ggp.pas:22 
+msgid "Export for TomTom navigation"
+msgstr "Export do navigací TomTom"
+
+#: tomtom.ggp.pas:43 
+msgid "Select destination folder"
+msgstr "Vyberte cílovou složku"
+
+#: tomtom.ggp.pas:46 
+msgid "Cancel pressed"
+msgstr "Stisknuto storno"
+
+#: tomtom.ggp.pas:138 
+msgid "Setting destination folder"
+msgstr "Nastavuji cílový adresář"
+
+#: tomtom.ggp.pas:148 
+msgid "Sorting points into categories"
+msgstr "Třídím body podle kategorií"
+
+#. desticon := GEOGET_SCRIPTDIR + '\tomtom\last\' + category + '.bmp';
+#: tomtom.ggp.pas:165 
+msgid "Could not found the file "
+msgstr "Nemohu nalézt soubor "
+
+#: tomtom.ggp.pas:165 
+msgid " and copy it in "
+msgstr " a zkopírovat jej do "
+
+#: tomtom.ggp.pas:196 
+msgid " points)"
+msgstr " bodů)"
+
+#: tomtom.ggp.pas:259 
+msgid "Generating output"
+msgstr "Procházím body a generuji výstup"
