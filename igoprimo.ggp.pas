@@ -2,7 +2,7 @@
   GeoGet 2 General Plugin Script
   www: http://geoget.ararat.cz/doku.php/user:skript:igoprimo
   autor: mikrom, http://mikrom.cz
-  version: 0.0.2.1
+  version: 0.0.3.0
 
   KML in iGO
   - https://dl.dropboxusercontent.com/u/4555713/GeoGet/igoprimo/Using%20POIs%20with%20IGO8%20Navigation%20Devices.pdf
@@ -74,6 +74,7 @@ end;
 {This method return header of KML file}
 function GetExportHeader: String;
 begin
+  // <?xml version="1.0" encoding="windows-1250"?>
   Result := '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">' + CRLF +
             '<Document><name>Geocaching</name><metadata><igoicon><filename>Geocaching.bmp</filename></igoicon></metadata>' + CRLF;
 end;
@@ -93,8 +94,8 @@ begin
   </Placemark>
   }
   Result := '  <Placemark>' + CRLF +
-            '    <name>' + CData(wName) + '</name>' + CRLF;
-  if wDesc <> '' then Result := Result + '    <description>' + CData(wDesc) + '</description>' + CRLF;
+            '    <name>' + XMLEntityEncode(wName) + '</name>' + CRLF;
+  if wDesc <> '' then Result := Result + '    <description>' + XMLEntityEncode(wDesc) + '</description>' + CRLF;
   Result := Result + '    <phoneNumber>' + wID + '</phoneNumber>' + CRLF +
                      '    <Point><coordinates>' + wLon + ',' + wLat + '</coordinates></Point>' + CRLF +
                      '  </Placemark>';
@@ -172,8 +173,8 @@ begin
     exportData := ReplaceString(exportData, '<Folder><name>' + SeparateLeft(category, ' - ') + '</name><metadata><igoicon><filename>' + SeparateLeft(category, ' - ') + '.bmp</filename></igoicon></metadata>',
                                             '<Folder><name>' + category + '</name><metadata><igoicon><filename>' + category + '.bmp</filename></igoicon></metadata>'); // neskutecna prasarna!
 
-    //if IsUtf(exportData) then showmessage('utf!');
-    //StringToFile(UtfToAscii(exportData), exportFile);
+    //StringToFile(UtfToAscii(exportData), exportFile); // tvori soubor bez diakritiky, v kodovani cp1250, igo ho zvladne
+    //StringToFile(exportData, exportFile); // tvori soubor s funkcni diakritikou, ve kodovani utf8, ale igo ho nekdy nezvladne
     StringToFile(exportData, exportFile);
   end;
 end;

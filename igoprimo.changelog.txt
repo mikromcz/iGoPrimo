@@ -1,18 +1,23 @@
-=== Instalace ===
+** Instalace **
   * do /iGO/content/userdata/usericon se nakopírují pøipravené ikony ze sloky icons/igo. Toto staèí udìlat jen jednou, proto toto skript nezajišuje automaticky.
   * do /iGO/content/userdata/poi se nakopírují vynenerované KML soubory
   * v iGO Primo je tøeba v nastavení mapy zapnout kategorii bodù Geocaching
 
-=== 0.0.2.0 () ===
+** 0.0.3.0 (2014/06/24) **
+  * snad definitivnì vyøešené pády igo
+  * generují se krásné a validní KML soubory v UTF-8, s problematickımi znaky ošetøenımi entitami
+  * verze uveøejnìná na araratu
+
+** 0.0.2.0 (2014/06/16) **
   * oprava nahrazování CRLF, myslel jsem e VarSubst neumí %CRLF%, ale umí &CRLF& :) dùsledkem je odstranìní zasekávání exportu
   * "name" a "description" jsou zabaleny do funkce pro odstranìní diakritiky, tøeba to pomùe pøi zasekávání iGo po zapnutí
 
-=== 0.0.1.0 (2014/06/13) ===
+** 0.0.1.0 (2014/06/13) **
   * vyøazena sloka \last, exportuje se pøímo do vybraného umístìní
   * monost zvolit export ikon. pokud je vybráno, tak se vıstup roztøídí do sloek (ikony se exportují všechny)
   * opravena závaná chyba v exportu kdy se do KML nezapsala informace o kategorii (by byl název souboru vpoøádku)
 
-=== 0.0.0.3 (2014/06/11) ===
+** 0.0.0.3 (2014/06/11) **
   * doplnìny všechny BMP ikony, nahrát radìji všechny znova do navigace
   * pøedìlán tøídící algoritmus, vypadá to teï funkèní
   * zrušena selekce disabled
@@ -21,7 +26,7 @@
   * pozor kategorie "Final Location - Found" a "Final Location - 5" má podobnou ikonku - zelenou
   * doplnìna CZ lokalizace
 
-=== 0.0.0.2 (2014/06/08) ===
+** 0.0.0.2 (2014/06/08) **
   * pøidána volitelná monost smazání vıstupní sloky pøed exportem EMPTY_EXPORT_FOLDER
   * optimalizace KML (pokud není hint, tak se negeneruje; do KML se nezapisuje nadm. vıška.)
   * pøidána monost definovat obsah poznámky keše/waypointu také pomocí VarSubst
@@ -29,6 +34,6 @@
   * jako telefonní èíslo se zobrazí GC kód keše/waypointu
   * mnoho dalších optimalizací
 
-=== 0.0.0.1 (2014/06/02) ===
+** 0.0.0.1 (2014/06/02) **
   * úvodní verze
   * export pro BeOnRoad "ohnutı" pro generování XML/KML
