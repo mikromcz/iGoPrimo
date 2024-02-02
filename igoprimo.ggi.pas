@@ -1,6 +1,8 @@
 {
-  GeoGet 2
-  Installation script for GIP packages
+  GeoGet 2 Installation script for GIP packages
+  www: http://geoget.ararat.cz/doku.php/user:skript:igoprimo
+  autor: mikrom, http://mikrom.cz
+  version: 0.0.0.3
 }
 
 {Do install tasks here.}

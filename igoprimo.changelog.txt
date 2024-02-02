@@ -2,8 +2,17 @@
   * do /iGO/content/userdata/usericon se nakopírují pøipravené ikony ze sloky icons/igo. Toto staèí udìlat jen jednou, proto toto skript nezajišuje automaticky.
   * do /iGO/content/userdata/poi se nakopírují vynenerované KML soubory
   * v iGO Primo je tøeba v nastavení mapy zapnout kategorii bodù Geocaching
-  
-=== 0.0.0.2 (2014/06/??) ===
+
+=== 0.0.0.3 (2014/06/11) ===
+  * doplnìny všechny BMP ikony, nahrát radìji všechny znova do navigace
+  * pøedìlán tøídící algoritmus, vypadá to teï funkèní
+  * zrušena selekce disabled
+  * zrušen prefix
+  * pozor kategorie "Final Location" a "Final Location - 0" má podobnou ikonku - bílou
+  * pozor kategorie "Final Location - Found" a "Final Location - 5" má podobnou ikonku - zelenou
+  * doplnìna CZ lokalizace
+
+=== 0.0.0.2 (2014/06/08) ===
   * pøidána volitelná monost smazání vıstupní sloky pøed exportem EMPTY_EXPORT_FOLDER
   * optimalizace KML (pokud není hint, tak se negeneruje; do KML se nezapisuje nadm. vıška.)
   * pøidána monost definovat obsah poznámky keše/waypointu také pomocí VarSubst

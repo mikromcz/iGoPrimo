@@ -1,8 +1,8 @@
 {
-  GeoGet 2
+  GeoGet 2 General Plugin Script
   www: http://geoget.ararat.cz/doku.php/user:skript:igoprimo
   autor: mikrom, http://mikrom.cz
-  version: 0.0.0.2
+  version: 0.0.0.3
 }
 
 uses VarSubstUnit, RelToAbsPathUnit;
@@ -23,7 +23,7 @@ end;
 {What will be displayed as hint in case of icon on the toolbar?}
 function PluginHint: String;
 begin
-  Result := _('Export for igoprimo navigation');
+  Result := _('Export for iGO Primo navigation');
 end;
 
 {Icon data.}
@@ -71,9 +71,6 @@ end;
 function FormatPoint(wLat, wLon, wName, wID, wDesc: String): String;
 begin
   Result := '';
-  wName := RegexReplace('[\n\r\t]', wName, '', false); // Replace invalid characters in name
-  wDesc := RegexReplace('[\n\r\t]', wDesc, '', false); // Replace invalid characters in name
-  //wDesc := Copy(wDesc, 0, 200); // Cut hint length to 200 chars. I dunno what is max value, but 1340 causes ForceClose of BOR app
   {
   <Placemark>
    <name><![CDATA[UO5B Cestovateluv poklad - Explorer's treasure [Final]]]></name>
@@ -190,49 +187,45 @@ var
   n: Integer;
 begin
   if ((not GeoBusyTest) and GC.IsListed and (not GC.IsEmptyCoord)) then begin
+
     if (EXPORT_GEOCACHES = '1') and IsGeocache(GC) then begin // Export geocaches
-      if GC.IsOwner then cat := 'Own Cache' // Own chaches
-      else if GC.IsFound then cat := 'Found Cache' // Found caches
-      else cat := GC.cachetype; // Rest
-      if (SEPARATE_DISABLED = '1') then begin // Separate disabled to another file (with grey icon)
-        if GC.IsDisabled then cat := cat + ' - Disabled';
-      end;
+      cat := GC.cachetype; // "Traditional Cache", "Multi-cache", "Unknown Cache", ...
+      if GC.IsOwner then cat := cat + ' - Own' // Own chaches
+      else if GC.IsFound then cat := cat + ' - Found'; // Found caches
       CatAddGC(GC, cat);
     end;
 
     if (EXPORT_WAYPOINTS = '1') then begin // Export waypoints
-      for n := 0 to GC.Waypoints.Count - 1 do begin //// ??begin??
-        if GC.Waypoints[n].IsListed and (not GC.Waypoints[n].IsEmptyCoord) then begin
+      for n := 0 to GC.Waypoints.Count - 1 do begin //for waypoints
+        if GC.Waypoints[n].IsListed and (not GC.Waypoints[n].IsEmptyCoord) then begin // waypoints islisted and not empty coord
+
           cat := GC.Waypoints[n].WptType;
 
-          if (SEPARATE_DISABLED = '1') then begin // Separate disabled to another file (with grey icon)
-            if GC.IsDisabled then cat := cat + ' - Disabled';
+          if GC.IsOwner then cat := cat + ' - Own' // own
+          else if GC.IsFound then begin // found
+            if (EXPORT_ONLY_FINAL_WAYPOINTS_WHEN_FOUND = '1') and (GC.Waypoints[n].WptType = wp_final) then begin
+              CatAddWpt(GC.Waypoints[n], cat + ' - Found');
+              Exit;
+            end
+            else cat := cat + ' - Found';
+          end
+          else if not GC.IsFound and (GC.Waypoints[n].WptType = wp_final) then begin
+            case GC.Waypoints[n].Comment of
+              '{0}': cat := cat + ' - 0';
+              '{1}': cat := cat + ' - 1';
+              '{2}': cat := cat + ' - 2';
+              '{3}': cat := cat + ' - 3';
+              '{4}': cat := cat + ' - 4';
+              '{5}': cat := cat + ' - 5';
+              '{6}': cat := cat + ' - 6';
+            end;
           end;
 
-          // pokus s {6}, {1}, {0}, ... pro cepiho :)
-          if GC.Waypoints[n].WptType = wp_final then begin
-            case GC.Waypoints[n].Comment of
-              '{0}': CatAddWpt(GC.Waypoints[n], cat + ' - 0');
-              '{1}': CatAddWpt(GC.Waypoints[n], cat + ' - 1');
-              '{2}': CatAddWpt(GC.Waypoints[n], cat + ' - 2');
-              '{3}': CatAddWpt(GC.Waypoints[n], cat + ' - 3');
-              '{4}': CatAddWpt(GC.Waypoints[n], cat + ' - 4');
-              '{5}': CatAddWpt(GC.Waypoints[n], cat + ' - 5');
-              '{6}': CatAddWpt(GC.Waypoints[n], cat + ' - 6');
-            end;
-          end;
-          
-          if GC.IsFound and (EXPORT_ONLY_FINAL_WAYPOINTS_WHEN_FOUND = '1') then begin // Export only final wpt for found caches
-            if (GC.Waypoints[n].WptType = wp_final) then begin
-              ReplaceString(cat, ' - Disabled', ''); // ja nevim no, u me je to v poho, ale CEPImu to blbne. tak pro nej :)
-              CatAddWpt(GC.Waypoints[n], cat + ' - Found');
-            end;
-          end
-          else
-            CatAddWpt(GC.Waypoints[n], cat);
-        end;
-      end; ///// ??
-    end;
+          CatAddWpt(GC.Waypoints[n], cat);
+
+        end; // /waypoints islisted and not empty coord
+      end; // /for waypoints
+    end; // /exportwaypoints
   end
   else GeoAbort;
 end;
@@ -254,7 +247,6 @@ begin
   cat_callback := @CatCallback;
   CatSort;
   CloseFile(lastCategory);
-
   CatFinish; // Everything is done
   
   {Copy to destination (export) folder}
@@ -263,7 +255,7 @@ begin
     FileList(ReplaceString(GEOGET_SCRIPTFULLNAME, GEOGET_SCRIPTNAME, '') + 'last\', file);
     for n := 0 to file.Count-1 do begin
       fileName := RegexExtract('[^\\]+$' , file[n]); // Get file name
-      if RegexFind('\.kml$', fileName) then CopyFile(File[n], exportFolder + prefix + fileName);
+      if RegexFind('\.kml$', fileName) then CopyFile(File[n], exportFolder + fileName);
     end;
   finally
     file.Free;

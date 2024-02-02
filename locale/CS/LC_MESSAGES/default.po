@@ -5,55 +5,68 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.0.0\n"
-"POT-Creation-Date: 2010-10-24 21:43\n"
-"PO-Revision-Date: 2010-10-24 21:43+0100\n"
+"Project-Id-Version: 0.0.0.3\n"
+"POT-Creation-Date: 2014-06-11 11:19\n"
+"PO-Revision-Date: 2014-06-11 11:19+0100\n"
 "Last-Translator: mikrom <mikrom@mikrom.cz>\n"
 "Language-Team: mikrom <mikrom@mikrom.cz>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.3.0\n"
-"X-Poedit-Language: Czech\n"
-"X-Poedit-Country: CZECH REPUBLIC\n"
+"X-Generator: Poedit 1.5.5\n"
+"Language: cs_CZ\n"
 
-#: tomtom.ggp.pas:16 
-msgid "TomTom"
+#: igoprimo.gge.pas:22
+msgid ""
+"Export specially designed for iGO Primo for Android.<font size=\"small"
+"\"><br><br>Installation:<br>1. Copy BMP icons from GEOGET_SCRIPTDIR\\igoprimo"
+"\\icons\\igo to /iGo/content/userdata/usericon<br>2. Copy exported KML files "
+"in /iGO/content/userdata/poi<br>3. Enable POI category Geocaching in map "
+"settings<br>If you like donate hard work you can buy mi a dring at PayPal: "
+"mikrom@mikrom.cz</font>"
+msgstr ""
+"Export speciálně navržený pro iGO Primo pro Android.<font size=\"small"
+"\"><br><br>Instalace:<br>1. Zkopírujte BMP ikony ze složky GEOGET_SCRIPTDIR"
+"\\igoprimo\\icons\\igo do /iGo/content/userdata/usericon<br>2. Zkopírujte "
+"vyexportované KML soubory do  /iGO/content/userdata/poi<br>3. V nastavení "
+"mapy zapněte kategorii POI Geocaching<br>Pokud chcete ocenit mojí tvrdou "
+"práci můžete mi přispět na mikrom@mikrom.cz přes PayPal.</font>"
+
+#: igoprimo.ggp.pas:20
+msgid "POI iGO Primo"
 msgstr ""
 
-#: tomtom.ggp.pas:22 
-msgid "Export for TomTom navigation"
-msgstr "Export do navigací TomTom"
+#: igoprimo.ggp.pas:26
+msgid "Export for iGO Primo navigation"
+msgstr "Export do navigace iGO Primo"
 
-#: tomtom.ggp.pas:43 
+#: igoprimo.ggp.pas:46
 msgid "Select destination folder"
 msgstr "Vyberte cílovou složku"
 
-#: tomtom.ggp.pas:46 
+#: igoprimo.ggp.pas:48
 msgid "Cancel pressed"
 msgstr "Stisknuto storno"
 
-#: tomtom.ggp.pas:138 
+#: igoprimo.ggp.pas:133
 msgid "Setting destination folder"
 msgstr "Nastavuji cílový adresář"
 
-#: tomtom.ggp.pas:148 
+#. Prikazeme knihovne Category, aby se pripravila na prijimani kesi k zatrideni
+#: igoprimo.ggp.pas:139
 msgid "Sorting points into categories"
 msgstr "Třídím body podle kategorií"
 
-#. desticon := GEOGET_SCRIPTDIR + '\tomtom\last\' + category + '.bmp';
-#: tomtom.ggp.pas:165 
-msgid "Could not found the file "
-msgstr "Nemohu nalézt soubor "
-
-#: tomtom.ggp.pas:165 
-msgid " and copy it in "
-msgstr " a zkopírovat jej do "
-
-#: tomtom.ggp.pas:196 
+#: igoprimo.ggp.pas:177
 msgid " points)"
 msgstr " bodů)"
 
-#: tomtom.ggp.pas:259 
+#: igoprimo.ggp.pas:246
 msgid "Generating output"
 msgstr "Procházím body a generuji výstup"
+
+#~ msgid "Could not found the file "
+#~ msgstr "Nemohu nalézt soubor "
+
+#~ msgid " and copy it in "
+#~ msgstr " a zkopírovat jej do "
