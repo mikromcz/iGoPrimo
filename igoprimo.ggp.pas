@@ -2,7 +2,7 @@
   GeoGet 2 General Plugin Script
   www: http://geoget.ararat.cz/doku.php/user:skript:igoprimo
   autor: mikrom, http://mikrom.cz
-  version: 0.0.2.0
+  version: 0.0.2.1
 
   KML in iGO
   - https://dl.dropboxusercontent.com/u/4555713/GeoGet/igoprimo/Using%20POIs%20with%20IGO8%20Navigation%20Devices.pdf
@@ -93,8 +93,8 @@ begin
   </Placemark>
   }
   Result := '  <Placemark>' + CRLF +
-            '    <name>' + CData(UtfToAscii(wName)) + '</name>' + CRLF;
-  if wDesc <> '' then Result := Result + '    <description>' + CData(UtfToAscii(wDesc)) + '</description>' + CRLF;
+            '    <name>' + CData(wName) + '</name>' + CRLF;
+  if wDesc <> '' then Result := Result + '    <description>' + CData(wDesc) + '</description>' + CRLF;
   Result := Result + '    <phoneNumber>' + wID + '</phoneNumber>' + CRLF +
                      '    <Point><coordinates>' + wLon + ',' + wLat + '</coordinates></Point>' + CRLF +
                      '  </Placemark>';
@@ -171,6 +171,9 @@ begin
                                '</kml>';
     exportData := ReplaceString(exportData, '<Folder><name>' + SeparateLeft(category, ' - ') + '</name><metadata><igoicon><filename>' + SeparateLeft(category, ' - ') + '.bmp</filename></igoicon></metadata>',
                                             '<Folder><name>' + category + '</name><metadata><igoicon><filename>' + category + '.bmp</filename></igoicon></metadata>'); // neskutecna prasarna!
+
+    //if IsUtf(exportData) then showmessage('utf!');
+    //StringToFile(UtfToAscii(exportData), exportFile);
     StringToFile(exportData, exportFile);
   end;
 end;
