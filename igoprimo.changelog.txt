@@ -3,6 +3,11 @@
   * do /iGO/content/userdata/poi se nakopírují vynenerované KML soubory
   * v iGO Primo je tøeba v nastavení mapy zapnout kategorii bodù Geocaching
 
+=== 0.0.1.0 (2014/06/13) ===
+  * vyøazena sloka \last, exportuje se pøímo do vybraného umístìní
+  * monost zvolit export ikon. pokud je vybráno, tak se vıstup roztøídí do sloek (ikony se exportují všechny)
+  * opravena závaná chyba v exportu kdy se do KML nezapsala informace o kategorii (by byl název souboru vpoøádku)
+
 === 0.0.0.3 (2014/06/11) ===
   * doplnìny všechny BMP ikony, nahrát radìji všechny znova do navigace
   * pøedìlán tøídící algoritmus, vypadá to teï funkèní

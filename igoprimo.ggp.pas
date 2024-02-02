@@ -2,7 +2,15 @@
   GeoGet 2 General Plugin Script
   www: http://geoget.ararat.cz/doku.php/user:skript:igoprimo
   autor: mikrom, http://mikrom.cz
-  version: 0.0.0.3
+  version: 0.0.0.4
+
+  KML tutorial
+  - https://developers.google.com/kml/documentation/kml_tut
+
+  XML znaky
+  - http://www.w3.org/TR/xml/#charsets
+  - http://xml.silmaril.ie/specials.html
+  - vpodstate hlavne & < > " ' ale nemely by vadit pokud to bude v CDATA
 }
 
 uses VarSubstUnit, RelToAbsPathUnit;
@@ -54,7 +62,6 @@ begin
 
   ForceDirectories(exportFolder); // If it not exist
   if (copy(exportFolder, length(exportFolder), 1) <> '\') then exportFolder := exportFolder + '\'; // If it not ends with backslash
-  if EMPTY_EXPORT_FOLDER = '1' then DeleteFiles(exportFolder + '*.*');
 end;
 
 {This method return header of KML file}
@@ -62,9 +69,13 @@ function GetExportHeader: String;
 begin
   Result := '<?xml version="1.0" encoding="UTF-8"?>' + CRLF +
             '<kml xmlns="http://www.opengis.net/kml/2.2">' + CRLF +
-            '<Document>' + CRLF +
-            ' <name>Geocaching</name>' + CRLF +
-            ' <metadata><igoicon><filename>Geocaching.bmp</filename></igoicon></metadata>' + CRLF;
+            '  <Document>' + CRLF +
+            '    <name>Geocaching</name>' + CRLF +
+            '    <metadata>' + CRLF +
+            '      <igoicon>' + CRLF +
+            '        <filename>Geocaching.bmp</filename>' + CRLF +
+            '      </igoicon>' + CRLF +
+            '    </metadata>' + CRLF;
 end;
 
 {This method make String structured like part of ASC document}
@@ -73,18 +84,22 @@ begin
   Result := '';
   {
   <Placemark>
-   <name><![CDATA[UO5B Cestovateluv poklad - Explorer's treasure [Final]]]></name>
-   <description><![CDATA[WP: FI44NPN, Type: Final Location, Name: Final, Desc: , Parent: Cestovateluv poklad - Explorer's treasure]]></description>
-   <phoneNumber>+49</phoneNumber>
-   <Point>
-    <coordinates>15.90725,50.5571,0</coordinates> // lon,lat[,ele]
-   </Point>
+    <name><![CDATA[UO5B Cestovateluv poklad - Explorer's treasure [Final]]]></name>
+    <description><![CDATA[WP: FI44NPN, Type: Final Location, Name: Final, Desc: , Parent: Cestovateluv poklad - Explorer's treasure]]></description>
+    <phoneNumber>+49</phoneNumber>
+    <Point>
+      <coordinates>15.90725,50.5571,0</coordinates> // lon,lat[,ele]
+    </Point>
   </Placemark>
   }
-  Result := '  <Placemark>' + CRLF + '   <name>' + CData(wName) + '</name>' + CRLF;
-  if wDesc <> '' then Result := Result + '   <description>' + CData(wDesc) + '</description>' + CRLF;
-  Result := Result + '   <phoneNumber>' + wID + '</phoneNumber>' + CRLF +
-                     '   <Point><coordinates>' + wLon + ',' + wLat + '</coordinates></Point>' + CRLF + '  </Placemark>';
+  Result := '      <Placemark>' + CRLF +
+            '        <name>' + CData(wName) + '</name>' + CRLF;
+  if wDesc <> '' then Result := Result + '        <description>' + CData(wDesc) + '</description>' + CRLF;
+  Result := Result + '        <phoneNumber>' + wID + '</phoneNumber>' + CRLF +
+                     '        <Point>' + CRLF +
+                     '          <coordinates>' + wLon + ',' + wLat + '</coordinates>' + CRLF +
+                     '        </Point>' + CRLF +
+                     '      </Placemark>';
 end;
 
 {This method returns True if passed point is geocache}
@@ -101,8 +116,8 @@ begin
   wLat := geo.Lat;
   wLon := geo.Lon;
   wID := geo.ID;
-  VarSubstGeo(geo, GEOCACHE_NAME, VARSUBST_UTF, wName);
-  VarSubstGeo(geo, GEOCACHE_DESCRIPTION, VARSUBST_UTF, wDesc);
+  VarSubstGeo(geo, GEOCACHE_NAME, VARSUBST_UTF, wName); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
+  VarSubstGeo(geo, GEOCACHE_DESCRIPTION, VARSUBST_UTF, wDesc); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
 
   Result := FormatPoint(wLat, wLon, wName, wID, wDesc); // potom nechame logiku bod zpracovat
 end;
@@ -117,8 +132,8 @@ begin
   wLat := wpt.Lat;
   wLon := wpt.Lon;
   wID := wpt.ID;
-  VarSubstWpt(wpt, WAYPOINT_NAME, VARSUBST_UTF, wName);
-  VarSubstWpt(wpt, WAYPOINT_DESCRIPTION, VARSUBST_UTF, wDesc);
+  VarSubstWpt(wpt, WAYPOINT_NAME, VARSUBST_UTF, wName); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
+  VarSubstWpt(wpt, WAYPOINT_DESCRIPTION, VARSUBST_UTF, wDesc); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
 
   Result := FormatPoint(wLat, wLon, wName, wID, wDesc); // potom nechame logiku bod zpracovat
 end;
@@ -129,8 +144,8 @@ begin
   Counter := 0;
   GeoBusyCaption(_('Setting destination folder'));
   GeoBusyKind('');
-  ChooseFolder;
-  DelTree(ReplaceString(GEOGET_SCRIPTFULLNAME, GEOGET_SCRIPTNAME, '') + 'last\'); // Smazeme \last s docasnejma souborama
+  ChooseFolder; // zavola funkci pro vyber exportFolder
+  if (EMPTY_EXPORT_FOLDER = '1') then DelTree(exportFolder); // Smazeme exportFolder
   CatInit; // Prikazeme knihovne Category, aby si pripravila databazi
   CatbeginUpdate; // Prikazeme knihovne Category, aby se pripravila na prijimani kesi k zatrideni
   GeoBusyCaption(_('Sorting points into categories'));
@@ -146,11 +161,19 @@ var
   exportFile: String;
 begin
   if category <> null then begin
-    exportFile := ReplaceString(GEOGET_SCRIPTFULLNAME, GEOGET_SCRIPTNAME, '') + 'last\' + category + '.kml';
+    if (EXPORT_ICONS = '1') then begin
+      if not DirectoryExists(exportFolder + 'poi') then ForceDirectories(exportFolder + 'poi');
+      exportFile := exportFolder + 'poi\' + category + '.kml';
+    end
+    else exportFile := exportFolder + category + '.kml';
 
     ForceDirectories(RegexExtract('^.*\\', exportFile));
-    exportData := exportData + ' </Folder>' + CRLF + '</Document>' + CRLF + '</kml>';
+    exportData := exportData + '    </Folder>' + CRLF +
+                               '  </Document>' + CRLF +
+                               '</kml>';
     exportData := ReplaceString(exportData, '#CRLF#', CRLF);
+    exportData := ReplaceString(exportData, '      <name>' + SeparateLeft(category, ' - ') + '</name>', '      <name>' + category + '</name>'); // neskutecna prasarna!
+    exportData := ReplaceString(exportData, '          <filename>' + SeparateLeft(category, ' - ') + '.bmp</filename>', '          <filename>' + category + '.bmp</filename>'); // neskutecna prasarna!
     StringToFile(exportData, exportFile);
   end;
 end;
@@ -165,12 +188,20 @@ begin
     if (category <> lastCategory) then begin
       CloseFile(lastCategory);
       OpenFile;
-      if geo <> nil then exportData := exportData + ' <Folder>' + CRLF +
-                                                    '  <name>' + geo.CacheType + '</name>' + CRLF +
-                                                    '  <metadata><igoicon><filename>' + geo.CacheType + '.bmp</filename></igoicon></metadata>' + CRLF;
-      if wpt <> nil then exportData := exportData + ' <Folder>' + CRLF +
-                                                    '  <name>' + wpt.WptType + '</name>' + CRLF +
-                                                    '  <metadata><igoicon><filename>' + wpt.WptType + '.bmp</filename></igoicon></metadata>' + CRLF;
+      if geo <> nil then exportData := exportData + '    <Folder>' + CRLF +
+                                                    '      <name>' + geo.CacheType + '</name>' + CRLF +
+                                                    '      <metadata>' + CRLF +
+                                                    '        <igoicon>' + CRLF +
+                                                    '          <filename>' + geo.CacheType + '.bmp</filename>' + CRLF +
+                                                    '        </igoicon>' + CRLF +
+                                                    '      </metadata>' + CRLF;
+      if wpt <> nil then exportData := exportData + '    <Folder>' + CRLF +
+                                                    '      <name>' + wpt.WptType + '</name>' + CRLF +
+                                                    '      <metadata>' + CRLF +
+                                                    '        <igoicon>' + CRLF +
+                                                    '          <filename>' + wpt.WptType + '.bmp</filename>' + CRLF +
+                                                    '        </igoicon>' + CRLF +
+                                                    '       </metadata>' + CRLF;
       GeoBusyKind(category + ' (' + IntToStr(CatCategorySize(category)) + _(' points)'));
     end;
     lastCategory := category;
@@ -232,10 +263,6 @@ end;
 
 {Called on the end}
 procedure PluginStop;
-var
-  file: TStringList;
-  fileName: String;
-  n: Integer;
 begin
   Counter := 0;
   GeoBusyCaption(_('Generating output'));
@@ -248,16 +275,8 @@ begin
   CatSort;
   CloseFile(lastCategory);
   CatFinish; // Everything is done
-  
-  {Copy to destination (export) folder}
-  file := TStringList.Create;
-  try
-    FileList(ReplaceString(GEOGET_SCRIPTFULLNAME, GEOGET_SCRIPTNAME, '') + 'last\', file);
-    for n := 0 to file.Count-1 do begin
-      fileName := RegexExtract('[^\\]+$' , file[n]); // Get file name
-      if RegexFind('\.kml$', fileName) then CopyFile(File[n], exportFolder + fileName);
-    end;
-  finally
-    file.Free;
-  end;
+
+  {copy icons}
+  if (EXPORT_ICONS = '1') and (ICONS_FOLDER <> '') then
+    CopyTree(ReplaceString(GEOGET_SCRIPTFULLNAME, GEOGET_SCRIPTNAME, '') + ICONS_FOLDER, exportFolder + 'usericon\');
 end;
