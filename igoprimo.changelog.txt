@@ -3,6 +3,10 @@
   * do /iGO/content/userdata/poi se nakopírují vynenerované KML soubory
   * v iGO Primo je tøeba v nastavení mapy zapnout kategorii bodù Geocaching
 
+=== 0.0.2.0 () ===
+  * oprava nahrazování CRLF, myslel jsem že VarSubst neumí %CRLF%, ale umí &CRLF& :) dùsledkem je odstranìní zasekávání exportu
+  * "name" a "description" jsou zabaleny do funkce pro odstranìní diakritiky, tøeba to pomùže pøi zasekávání iGo po zapnutí
+
 === 0.0.1.0 (2014/06/13) ===
   * vyøazena složka \last, exportuje se pøímo do vybraného umístìní
   * možnost zvolit export ikon. pokud je vybráno, tak se výstup roztøídí do složek (ikony se exportují všechny)

@@ -2,7 +2,11 @@
   GeoGet 2 General Plugin Script
   www: http://geoget.ararat.cz/doku.php/user:skript:igoprimo
   autor: mikrom, http://mikrom.cz
-  version: 0.0.0.4
+  version: 0.0.2.0
+
+  KML in iGO
+  - https://dl.dropboxusercontent.com/u/4555713/GeoGet/igoprimo/Using%20POIs%20with%20IGO8%20Navigation%20Devices.pdf
+  - https://dl.dropboxusercontent.com/u/4555713/GeoGet/igoprimo/NavNGo_iGO8_working_with_KML_v22Feb2008.pdf
 
   KML tutorial
   - https://developers.google.com/kml/documentation/kml_tut
@@ -11,6 +15,9 @@
   - http://www.w3.org/TR/xml/#charsets
   - http://xml.silmaril.ie/specials.html
   - vpodstate hlavne & < > " ' ale nemely by vadit pokud to bude v CDATA
+
+  VarSubst neumi %CRLF%, iGO v KML neumi \n. Jediny co zvladne pro odradkovani je cistokrevne CRLF
+  ZMENA! Varsubs neumi %CRLF%, ale umi &CRLF&, takze ho lze pouzit na odradkovani
 }
 
 uses VarSubstUnit, RelToAbsPathUnit;
@@ -67,15 +74,8 @@ end;
 {This method return header of KML file}
 function GetExportHeader: String;
 begin
-  Result := '<?xml version="1.0" encoding="UTF-8"?>' + CRLF +
-            '<kml xmlns="http://www.opengis.net/kml/2.2">' + CRLF +
-            '  <Document>' + CRLF +
-            '    <name>Geocaching</name>' + CRLF +
-            '    <metadata>' + CRLF +
-            '      <igoicon>' + CRLF +
-            '        <filename>Geocaching.bmp</filename>' + CRLF +
-            '      </igoicon>' + CRLF +
-            '    </metadata>' + CRLF;
+  Result := '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">' + CRLF +
+            '<Document><name>Geocaching</name><metadata><igoicon><filename>Geocaching.bmp</filename></igoicon></metadata>' + CRLF;
 end;
 
 {This method make String structured like part of ASC document}
@@ -92,14 +92,12 @@ begin
     </Point>
   </Placemark>
   }
-  Result := '      <Placemark>' + CRLF +
-            '        <name>' + CData(wName) + '</name>' + CRLF;
-  if wDesc <> '' then Result := Result + '        <description>' + CData(wDesc) + '</description>' + CRLF;
-  Result := Result + '        <phoneNumber>' + wID + '</phoneNumber>' + CRLF +
-                     '        <Point>' + CRLF +
-                     '          <coordinates>' + wLon + ',' + wLat + '</coordinates>' + CRLF +
-                     '        </Point>' + CRLF +
-                     '      </Placemark>';
+  Result := '  <Placemark>' + CRLF +
+            '    <name>' + CData(UtfToAscii(wName)) + '</name>' + CRLF;
+  if wDesc <> '' then Result := Result + '    <description>' + CData(UtfToAscii(wDesc)) + '</description>' + CRLF;
+  Result := Result + '    <phoneNumber>' + wID + '</phoneNumber>' + CRLF +
+                     '    <Point><coordinates>' + wLon + ',' + wLat + '</coordinates></Point>' + CRLF +
+                     '  </Placemark>';
 end;
 
 {This method returns True if passed point is geocache}
@@ -118,7 +116,7 @@ begin
   wID := geo.ID;
   VarSubstGeo(geo, GEOCACHE_NAME, VARSUBST_UTF, wName); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
   VarSubstGeo(geo, GEOCACHE_DESCRIPTION, VARSUBST_UTF, wDesc); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
-
+  //wDesc := ReplaceString(wDesc, '#CRLF#', CRLF); // VarSubs nejak neumi %CRLF% - ALE UMI &CRLF&
   Result := FormatPoint(wLat, wLon, wName, wID, wDesc); // potom nechame logiku bod zpracovat
 end;
 
@@ -134,7 +132,7 @@ begin
   wID := wpt.ID;
   VarSubstWpt(wpt, WAYPOINT_NAME, VARSUBST_UTF, wName); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
   VarSubstWpt(wpt, WAYPOINT_DESCRIPTION, VARSUBST_UTF, wDesc); // zavolame knihovnu VarSubst ktera vrati zformatovany vysledek
-
+  //wDesc := ReplaceString(wDesc, '#CRLF#', CRLF); // VarSubs nejak neumi %CRLF% - ALE UMI &CRLF&
   Result := FormatPoint(wLat, wLon, wName, wID, wDesc); // potom nechame logiku bod zpracovat
 end;
 
@@ -168,12 +166,11 @@ begin
     else exportFile := exportFolder + category + '.kml';
 
     ForceDirectories(RegexExtract('^.*\\', exportFile));
-    exportData := exportData + '    </Folder>' + CRLF +
-                               '  </Document>' + CRLF +
+    exportData := exportData + '</Folder>' + CRLF +
+                               '</Document>' + CRLF +
                                '</kml>';
-    exportData := ReplaceString(exportData, '#CRLF#', CRLF);
-    exportData := ReplaceString(exportData, '      <name>' + SeparateLeft(category, ' - ') + '</name>', '      <name>' + category + '</name>'); // neskutecna prasarna!
-    exportData := ReplaceString(exportData, '          <filename>' + SeparateLeft(category, ' - ') + '.bmp</filename>', '          <filename>' + category + '.bmp</filename>'); // neskutecna prasarna!
+    exportData := ReplaceString(exportData, '<Folder><name>' + SeparateLeft(category, ' - ') + '</name><metadata><igoicon><filename>' + SeparateLeft(category, ' - ') + '.bmp</filename></igoicon></metadata>',
+                                            '<Folder><name>' + category + '</name><metadata><igoicon><filename>' + category + '.bmp</filename></igoicon></metadata>'); // neskutecna prasarna!
     StringToFile(exportData, exportFile);
   end;
 end;
@@ -188,20 +185,12 @@ begin
     if (category <> lastCategory) then begin
       CloseFile(lastCategory);
       OpenFile;
-      if geo <> nil then exportData := exportData + '    <Folder>' + CRLF +
-                                                    '      <name>' + geo.CacheType + '</name>' + CRLF +
-                                                    '      <metadata>' + CRLF +
-                                                    '        <igoicon>' + CRLF +
-                                                    '          <filename>' + geo.CacheType + '.bmp</filename>' + CRLF +
-                                                    '        </igoicon>' + CRLF +
-                                                    '      </metadata>' + CRLF;
-      if wpt <> nil then exportData := exportData + '    <Folder>' + CRLF +
-                                                    '      <name>' + wpt.WptType + '</name>' + CRLF +
-                                                    '      <metadata>' + CRLF +
-                                                    '        <igoicon>' + CRLF +
-                                                    '          <filename>' + wpt.WptType + '.bmp</filename>' + CRLF +
-                                                    '        </igoicon>' + CRLF +
-                                                    '       </metadata>' + CRLF;
+      if geo <> nil then exportData := exportData + '<Folder>' +
+                                                    '<name>' + geo.CacheType + '</name>' +
+                                                    '<metadata><igoicon><filename>' + geo.CacheType + '.bmp</filename></igoicon></metadata>' + CRLF;
+      if wpt <> nil then exportData := exportData + '<Folder>' +
+                                                    '<name>' + wpt.WptType + '</name>' +
+                                                    '<metadata><igoicon><filename>' + wpt.WptType + '.bmp</filename></igoicon></metadata>' + CRLF;
       GeoBusyKind(category + ' (' + IntToStr(CatCategorySize(category)) + _(' points)'));
     end;
     lastCategory := category;

@@ -8,6 +8,6 @@ const
   ICONS_FOLDER = 'icons\igo'; //Cesta k ikonám
   EXPORT_ICONS = '1'; //Exportovat i ikony? Exportují se všechny a výstup se zaøadí do složek
   GEOCACHE_NAME = '%REPLACEFULL("%IDTAG% %IF("%ISOWNER%"="true";"O";"")%%IF("%ISFOUND%" = "true";"F";"")%%IF("%ISARCHIVED%" = "true";"A";"%IF("%ISDISABLED%" = "true";"D";"")%")% %NAME%";"  ";" ")%'; //Název bodu (VarSubst)
-  GEOCACHE_DESCRIPTION = '%IF("%HINT%"<>"";"Hint:#CRLF#%HINT%";"")%%IF("%COMMENT%"<>"";"#CRLF##CRLF#Poznámka:#CRLF#%COMMENT%";"")%'; //Popis bodu (VarSubst)
+  GEOCACHE_DESCRIPTION = '%IF("%HINT%"<>"";"Hint:&CRLF&%HINT%";"Bez hintu")%%IF("%COMMENT%"<>"";"&CRLF&&CRLF&Poznamka:&CRLF&%COMMENT%";"")%'; //Popis bodu (VarSubst)
   WAYPOINT_NAME = '%REPLACEFULL("%IDTAG%/%WPTPREFIXID% %IF("%ISOWNER%"="true";"O";"")%%IF("%ISFOUND%" = "true";"F";"")%%IF("%ISARCHIVED%" = "true";"A";"%IF("%ISDISABLED%" = "true";"D";"")%")% %NAME% (%WPTNAME%)";"  ";" ")%'; //Název waypointu (VarSubst)
-  WAYPOINT_DESCRIPTION = '%IF("%HINT%"<>"";"Hint:#CRLF#%HINT%";"")%%IF("%WPTDESCRIPTION%"<>"";"#CRLF##CRLF#Poznámka:#CRLF#%WPTDESCRIPTION%";"")%%IF("%WPTCOMMENT%"<>"";"#CRLF##CRLF#Poznámka:#CRLF#%WPTCOMMENT%";"")%'; //Popis waypointu (VarSubst)
+  WAYPOINT_DESCRIPTION = '%IF("%HINT%"<>"";"Hint:&CRLF&%HINT%";"Bez hintu")%%IF("%WPTDESCRIPTION%"<>"";"&CRLF&&CRLF&Cmt.:&CRLF&%WPTDESCRIPTION%";"")%%IF("%WPTCOMMENT%"<>"";"&CRLF&&CRLF&Poznamka:&CRLF&%WPTCOMMENT%";"")%'; //Popis waypointu (VarSubst)
