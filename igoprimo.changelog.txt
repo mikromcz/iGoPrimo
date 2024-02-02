@@ -1,0 +1,16 @@
+=== Instalace ===
+  * do /iGO/content/userdata/usericon se nakopírují pøipravené ikony ze sloky icons/igo. Toto staèí udìlat jen jednou, proto toto skript nezajišuje automaticky.
+  * do /iGO/content/userdata/poi se nakopírují vynenerované KML soubory
+  * v iGO Primo je tøeba v nastavení mapy zapnout kategorii bodù Geocaching
+  
+=== 0.0.0.2 (2014/06/??) ===
+  * pøidána volitelná monost smazání vıstupní sloky pøed exportem EMPTY_EXPORT_FOLDER
+  * optimalizace KML (pokud není hint, tak se negeneruje; do KML se nezapisuje nadm. vıška.)
+  * pøidána monost definovat obsah poznámky keše/waypointu také pomocí VarSubst
+  * #CRLF# se nahrazuje odøádkováním (iGO v KML asi vesele ignoruje jakékoliv HTML)
+  * jako telefonní èíslo se zobrazí GC kód keše/waypointu
+  * mnoho dalších optimalizací
+
+=== 0.0.0.1 (2014/06/02) ===
+  * úvodní verze
+  * export pro BeOnRoad "ohnutı" pro generování XML/KML
