@@ -1,2 +1,19 @@
+# General
+*.bak
+*.old
+
+# Windows
+Thumbs.db
+[Dd]esktop.ini
+*.lnk
+
+# VisualStudio
+.vscode/
+
+# GeoGet
+/locale/CS/LC_MESSAGES/default.po~
+/locale/tools/
+
+# Script
 /last/
 /igoprimo.config.pas
